@@ -3,11 +3,9 @@ import React, { useEffect, useState } from 'react'
 // External Libraries
 import axios from 'axios'
 
-// Custom Components
-import { HF } from './HF'
+// components and utils
+import { HierarchyForm, prepareFormState, prepareGlobalStoreData } from '../HierarchyForm'
 
-// utils
-import { prepareFormState, prepareGlobalStoreData } from './common'
 
 const CONFIG = {
 	PRODUCTS: {
@@ -78,6 +76,7 @@ const CONFIG = {
 	},
 }
 
+const TITLE = 'Products and Plans'
 const ROOT_LEVEL_KEY = CONFIG.PRODUCTS.id
 
 // either redux or fetch
@@ -134,9 +133,9 @@ export const ProductPlans = () => {
 
 	return (
 		!isLoading &&
-		<HF
+		<HierarchyForm
+			title={ TITLE }
 			config={ CONFIG }
-			title='Products and Plans'
 			formInitState={ linkState }
 			globalStore={ globalState }
 			rootLevelKey={ ROOT_LEVEL_KEY }

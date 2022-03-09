@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useReducer } from 'react'
+import React, { createRef, useReducer } from 'react'
 
 // External Libraries
 import { isArray, isEmpty, findLastIndex } from 'lodash'
@@ -8,10 +8,10 @@ import { Level } from './Level'
 import { Ladder } from './Ladder'
 
 // utils
-import { getLevelWiseObject } from './common'
+import { getLevelWiseObject } from './utils'
 
 // css
-import './HierarchyForm.scss'
+import './scss/HierarchyForm.scss'
 
 // re-index resp. level and child levels array
 const reIndexClosure = ( state, config ) => {
@@ -108,10 +108,8 @@ const changeClosure = ( state, config, payload ) => {
 	object.isValidate = true
 	object.isValueUnknown = false
 
-	if ( isRootLevel ) {
+	if ( isRootLevel )
 		object.rootOid = oid
-		console.log( object )
-	}
 
 	const recursive = ( levelKey, uniqueKey, isRemoveAddObject = false ) => {
 		if ( !levelKey || !uniqueKey )
@@ -271,7 +269,7 @@ const reducer = ( state, { type, payload, config } ) => {
 	}
 }
 
-export const HF = ( {
+export const HierarchyForm = ( {
 	title,
 	config,
 	globalStore,
@@ -280,9 +278,9 @@ export const HF = ( {
 } ) => {
 	const [ reducerState, dispatch ] = useReducer( reducer, null, () => formInitState )
 
-	const parentElements = {}
-	const childElements = {}
 	const refs = {}
+	const childElements = {}
+	const parentElements = {}
 
 	const handleOnChange = React.useCallback( ( actionType, payload ) => {
 		dispatch( {
@@ -394,11 +392,12 @@ export const HF = ( {
 			{/* Title */ }
 			<span className='title'>{ title }</span>
 
-			{/* { elements.length ? elements : null } */ }
-			{ !isEmpty( parentElements ) && <Ladder
-				childElements={ childElements }
-				parentElements={ parentElements }
-			/> }
+			{ !isEmpty( parentElements ) &&
+				<Ladder
+					childElements={ childElements }
+					parentElements={ parentElements }
+				/>
+			}
 		</div>
 	)
 }

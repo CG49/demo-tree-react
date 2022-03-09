@@ -6,7 +6,7 @@ import { components } from 'react-select'
 import AsyncSelect from 'react-select/async'
 
 // css
-import './Level.scss'
+import './scss/Level.scss'
 
 const defaultStyle = {
 	addButton: {

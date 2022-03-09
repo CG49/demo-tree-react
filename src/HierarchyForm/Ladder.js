@@ -4,14 +4,11 @@ import React, { useEffect, useState } from 'react'
 import { Collapse } from 'react-bootstrap'
 import { isEmpty } from 'lodash'
 
-// css
-import './HierarchyForm.scss'
-
-const getState = rootOids => {
+const getState = ( rootOids, prevState = {} ) => {
 	const initState = {}
 
 	for ( let i = 0; i < rootOids.length; i++ )
-		initState[ rootOids[ i ] ] = true
+		initState[ rootOids[ i ] ] = typeof prevState[ rootOids[ i ] ] === 'undefined' ? true : prevState[ rootOids[ i ] ]
 
 	return initState
 }
@@ -23,14 +20,14 @@ export const Ladder = ( { parentElements = {}, childElements = {} } ) => {
 	const [ state, setState ] = useState( () => getState( rootOids ) )
 
 	useEffect( () => {
-		setState( getState( rootOids ) )
+		setState( prevState => getState( rootOids, prevState ) )
+		// eslint-disable-next-line
 	}, [ parentElements, childElements ] )
 
 	const handleCollapsible = React.useCallback( ( { rootOid } ) => {
 		// Change the collapsible icon
 		// ...
-		// console.log( rootOid )
-		// console.log( '========================' )
+
 		setState( prevState => ( {
 			...prevState,
 			[ rootOid ]: !prevState[ rootOid ],

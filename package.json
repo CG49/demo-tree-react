@@ -1,6 +1,6 @@
 {
-  "name": "demo-react",
-  "version": "0.1.0",
+  "name": "demo-tree-react",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
@@ -20,12 +20,12 @@
   "scripts": {
     "live": "serve -s build -l 1234",
     "start": "react-scripts start",
-    "blob-api": "json-server --watch ./src/data/blob.json --port 8080",
-    "client-api": "json-server --watch ./src/data/client.json --port 8081",
-    "location-api": "json-server --watch ./src/data/location.json --port 8082",
-    "link-api": "json-server --watch ./src/data/link.json --port 8083",
-    "product-api": "json-server --watch ./src/data/products.json --port 8084",
-    "plan-api": "json-server --watch ./src/data/plans.json --port 8085",
+    "blob-api": "json-server --watch ./data/blob.json --port 8080",
+    "client-api": "json-server --watch ./data/client.json --port 8081",
+    "location-api": "json-server --watch ./data/location.json --port 8082",
+    "link-api": "json-server --watch ./data/link.json --port 8083",
+    "product-api": "json-server --watch ./data/products.json --port 8084",
+    "plan-api": "json-server --watch ./data/plans.json --port 8085",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

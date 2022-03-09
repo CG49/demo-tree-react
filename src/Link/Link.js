@@ -1,8 +1,11 @@
 import React from 'react'
 
-// Custom Components
+// components
 import { Blob } from './Blob'
 import { ProductPlans } from './ProductPlans'
+
+// css
+import './Link.scss'
 
 export const Link = () => {
 	return (

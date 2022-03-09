@@ -3,11 +3,8 @@ import React, { useEffect, useState } from 'react'
 // External Libraries
 import axios from 'axios'
 
-// Custom Components
-import { HF } from './HF'
-
-// utils
-import { prepareFormState, prepareGlobalStoreData } from './common'
+// components and utils
+import { HierarchyForm, prepareFormState, prepareGlobalStoreData } from '../HierarchyForm'
 
 const CONFIG = {
 	BLOB: {
@@ -112,6 +109,7 @@ const CONFIG = {
 	},
 }
 
+const TITLE = 'Block of Businesses'
 const ROOT_LEVEL_KEY = CONFIG.BLOB.id
 
 // either redux or fetch
@@ -170,9 +168,9 @@ export const Blob = () => {
 
 	return (
 		!isLoading &&
-		<HF
+		<HierarchyForm
+			title={ TITLE }
 			config={ CONFIG }
-			title='Block of Businesses'
 			formInitState={ linkState }
 			globalStore={ globalState }
 			rootLevelKey={ ROOT_LEVEL_KEY }
