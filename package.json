@@ -1,0 +1,54 @@
+{
+  "name": "demo-react",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.3",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^0.26.0",
+    "bootstrap": "^5.1.3",
+    "lodash": "^4.17.21",
+    "react": "^17.0.2",
+    "react-bootstrap": "^2.1.2",
+    "react-bootstrap-icons": "^1.7.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "5.0.0",
+    "react-select": "^5.2.2",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "live": "serve -s build -l 1234",
+    "start": "react-scripts start",
+    "blob-api": "json-server --watch ./src/data/blob.json --port 8080",
+    "client-api": "json-server --watch ./src/data/client.json --port 8081",
+    "location-api": "json-server --watch ./src/data/location.json --port 8082",
+    "link-api": "json-server --watch ./src/data/link.json --port 8083",
+    "product-api": "json-server --watch ./src/data/products.json --port 8084",
+    "plan-api": "json-server --watch ./src/data/plans.json --port 8085",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "sass": "^1.49.7"
+  }
+}

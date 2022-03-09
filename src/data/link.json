@@ -1,0 +1,84 @@
+{
+	"link": {
+		"OID": "7841948a-9a6c-4406-bae1-f2f8af8028f4",
+		"BlockNumber": 3,
+		"BlockTitle": "Important link",
+		"LinkTitle": "Important useful link",
+		"LinkType": "Document",
+		"ContentReference": "Others",
+		"ExternalUrl": null,
+		"Access": "Both",
+		"EffectiveFrom": "2021-12-08",
+		"EffectiveTo": "2021-12-08",
+		"PageOID": null,
+		"DocumentOID": "abcd",
+		"Product": [
+			{
+				"ProductOid": "a0c057b6e-a47f-4a56-8d30-406c72026c6d",
+				"ProductID": "A",
+				"ProductName": "Apple",
+				"Plan": [
+					{
+						"PlanOid": "8f7558a9-85fb-47d1-a156-cf3eae94d8e2",
+						"PlanName": "Plan 1"
+					},
+					{
+						"PlanOid": "c544b966-8729-4144-bc0f-f867c141e96c",
+						"PlanName": "Plan 6"
+					}
+				]
+			},
+			{
+				"ProductOid": "a0748eb05-d2d3-493b-be09-367302b7ee55",
+				"ProductID": "B",
+				"ProductName": "Banana",
+				"Plan": []
+			}
+		],
+    	"BlockOfBusiness": [
+			{
+				"BlockOfBusinessOid": "aac00edd-8a21-4a61-899b-a734573dfc9a",
+				"BlockOfBusinessID": "SELF",
+				"BlockOfBusinessName": "Employee Benefits",
+				"aClient": [
+					{
+						"ClientOid": "c544b966-8729-4144-bc0f-f867c141e96c",
+						"ClientName": "Tumors Drug Store",
+						"Location": []
+					}
+				]
+			},
+			{
+				"BlockOfBusinessOid": "0c057b6e-a47f-4a56-8d30-406c72026c6d",
+				"BlockOfBusinessID": "VSV",
+				"BlockOfBusinessName": "Superior Vision",
+				"Client": [
+					{
+						"ClientOid": "c40d97f4-fdea-46a0-8b8a-c72f00a56dc0",
+						"ClientName": "Superior Vision Sample Group 01",
+						"Location": [
+							{
+								"LocationOid": "65fd310f-7615-4e9e-86dd-7aaf45e0462e",
+								"LocationName": "WMMS AZ"
+							},
+							{
+								"LocationOid": "dbff5100-0164-4e1e-9a99-dde6e78eb018",
+								"LocationName": "Wixom"
+							}
+						]
+					},
+					{
+						"ClientOid": "bb5b8193-09bf-49d4-9e7e-1139b33d61d4",
+						"ClientName": "Medicaid",
+						"aLocation": [
+							{
+								"LocationOid": "a013864c-7e30-4b41-9516-46fa71622ce2",
+								"LocationName": "Sun City 4"
+							}
+						]
+					}
+				]
+			}
+    	]
+  	}
+}

@@ -1,0 +1,114 @@
+{
+	"locations": [
+		{
+			"oid": "65fd310f-7615-4e9e-86dd-7aaf45e0462e",
+			"BlkOfBusOid": "0c057b6e-a47f-4a56-8d30-406c72026c6d",
+			"BlkOfBusId": "VSV",
+			"BlkOfBusName": "Superior Vision",
+			"ClientOid": "c40d97f4-fdea-46a0-8b8a-c72f00a56dc0",
+			"ClientId": "VSV01",
+			"ClientName": "Superior Vision Sample Group 01",
+			"LocationOid": null,
+			"LocationName": "WMMS AZ"
+		},
+		{
+			"oid": "dbff5100-0164-4e1e-9a99-dde6e78eb018",
+			"BlkOfBusOid": "0c057b6e-a47f-4a56-8d30-406c72026c6d",
+			"BlkOfBusId": "VSV",
+			"BlkOfBusName": "Superior Vision",
+			"ClientOid": "c40d97f4-fdea-46a0-8b8a-c72f00a56dc0",
+			"ClientId": "VSV01",
+			"ClientName": "Superior Vision Sample Group 01",
+			"LocationOid": null,
+			"LocationName": "Wixom"
+		},
+		{
+			"oid": "f69618fc-0e16-4771-ab5c-5a39369bf39e",
+			"BlkOfBusOid": "0c057b6e-a47f-4a56-8d30-406c72026c6d",
+			"BlkOfBusId": "VSV",
+			"BlkOfBusName": "Superior Vision",
+			"ClientOid": "20b934a8-def6-423d-ba02-bc1ed1700960",
+			"ClientId": "UPSSI",
+			"ClientName": "UPS",
+			"LocationOid": null,
+			"LocationName": "Superstition"
+		},
+		{
+			"oid": "65cd4e27-6fa0-4089-b9f2-df48af7fb0d9",
+			"BlkOfBusOid": "aac00edd-8a21-4a61-899b-a734573dfc9a",
+			"BlkOfBusId": "SELF",
+			"BlkOfBusName": "Employee Benefits",
+			"ClientOid": "c544b966-8729-4144-bc0f-f867c141e96c",
+			"ClientId": "TUMAU",
+			"ClientName": "Tumors Drug Store",
+			"LocationOid": null,
+			"LocationName": "Warehouse"
+		},
+		{
+			"oid": "295b9169-453f-4291-b297-477112e8e479",
+			"BlkOfBusOid": "aac00edd-8a21-4a61-899b-a734573dfc9a",
+			"BlkOfBusId": "SELF",
+			"BlkOfBusName": "Employee Benefits",
+			"ClientOid": "c544b966-8729-4144-bc0f-f867c141e96c",
+			"ClientId": "TUMAU",
+			"ClientName": "Tumors Drug Store",
+			"LocationOid": null,
+			"LocationName": "UPSMS"
+		},
+		{
+			"oid": "d974c00c-c428-412e-ad04-0c8bb2b3b7c4",
+			"BlkOfBusOid": "aac00edd-8a21-4a61-899b-a734573dfc9a",
+			"BlkOfBusId": "SELF",
+			"BlkOfBusName": "Employee Benefits",
+			"ClientOid": "c544b966-8729-4144-bc0f-f867c141e96c",
+			"ClientId": "TUMAU",
+			"ClientName": "Tumors Drug Store",
+			"LocationOid": null,
+			"LocationName": "UPSAL"
+		},
+		{
+			"oid": "5184f226-53e0-4582-a323-896355226e49",
+			"BlkOfBusOid": "2ec6c775-2d15-42b1-9d50-091e62a6c399",
+			"BlkOfBusId": "HSE",
+			"BlkOfBusName": "Hospital System Employees",
+			"ClientOid": "edd89f1d-7b21-4479-b2ea-e4322d73f69c",
+			"ClientId": "GMH",
+			"ClientName": "Grace Memorial Hospital",
+			"LocationOid": null,
+			"LocationName": "Sun City 1"
+		},
+		{
+			"oid": "ccecd458-696c-4fdb-af53-f8a208723891",
+			"BlkOfBusOid": "e73d94a3-9368-42c6-b78b-c6f5bc53a9f9",
+			"BlkOfBusId": "ECI",
+			"BlkOfBusName": "Eldorado Line of Business",
+			"ClientOid": "0e4de534-4fc9-4454-91fa-0d3f5ca06b53",
+			"ClientId": "DSGRP",
+			"ClientName": "Demo Scenarios Sample Grouping",
+			"LocationOid": null,
+			"LocationName": "Sun City 2"
+		},
+		{
+			"oid": "6ca5aafe-180c-4b04-aa4d-99a46a5dcf89",
+			"BlkOfBusOid": "aac00edd-8a21-4a61-899b-a734573dfc9a",
+			"BlkOfBusId": "SELF",
+			"BlkOfBusName": "Employee Benefits",
+			"ClientOid": "3113eedb-9dac-4ee1-9df3-0b79cc1049e8",
+			"ClientId": "9942",
+			"ClientName": "AAA Trucking",
+			"LocationOid": null,
+			"LocationName": "Sun City 3"
+		},
+		{
+			"oid": "a013864c-7e30-4b41-9516-46fa71622ce2",
+			"BlkOfBusOid": "0c057b6e-a47f-4a56-8d30-406c72026c6d",
+			"BlkOfBusId": "VSV",
+			"BlkOfBusName": "Superior Vision",
+			"ClientOid": "bb5b8193-09bf-49d4-9e7e-1139b33d61d4",
+			"ClientId": "VBVH1",
+			"ClientName": "Medicaid",
+			"LocationOid": null,
+			"LocationName": "Sun City 4"
+		}
+	]
+}

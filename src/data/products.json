@@ -1,0 +1,29 @@
+{
+	"products": [
+		{
+			"oid": "a0c057b6e-a47f-4a56-8d30-406c72026c6d",
+			"ProductId": "A",
+			"ProductName": "Apple"
+		},
+		{
+			"oid": "a0748eb05-d2d3-493b-be09-367302b7ee55",
+			"ProductId": "B",
+			"ProductName": "Banana"
+		},
+		{
+			"oid": "a4c876c4b-6109-42cc-b70d-11793cf8342c",
+			"ProductId": "C",
+			"ProductName": "Coconut"
+		},
+		{
+			"oid": "ae830dd83-b485-4f68-b42a-051f6d1bce60",
+			"ProductId": "D",
+			"ProductName": "Dragon"
+		},
+		{
+			"oid": "a45f30466-7b08-497f-9ecd-a73d51bb74f6",
+			"ProductId": "E",
+			"ProductName": "Elderberry"
+		}		
+	]
+}
