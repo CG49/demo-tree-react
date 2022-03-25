@@ -6,7 +6,7 @@ import axios from 'axios'
 // components and utils
 import { HierarchyForm, prepareFormState, prepareGlobalStoreData } from '../HierarchyForm'
 
-const CONFIG = {
+export const CONFIG = {
 	BLOB: {
 		id: 'BLOB',
 		parentKey: null,
@@ -110,7 +110,7 @@ const CONFIG = {
 }
 
 const TITLE = 'Block of Businesses'
-const ROOT_LEVEL_KEY = CONFIG.BLOB.id
+export const ROOT_LEVEL_KEY = CONFIG.BLOB.id
 
 // either redux or fetch
 const endpoints = {
@@ -125,7 +125,7 @@ const initGlobalData = {
 	[ CONFIG.LOCATIONS.id ]: [],
 }
 
-export const Blob = () => {
+export const Blob = ({setParentState = null}) => {
 	const [ linkState, setLinkState ] = useState( {} )
 	const [ isLoading, setIsLoading ] = useState( true )
 	const [ globalState, setGlobalState ] = useState( initGlobalData )
@@ -174,6 +174,7 @@ export const Blob = () => {
 			formInitState={ linkState }
 			globalStore={ globalState }
 			rootLevelKey={ ROOT_LEVEL_KEY }
+			setParentState={ setParentState }
 		/>
 	)
 }
