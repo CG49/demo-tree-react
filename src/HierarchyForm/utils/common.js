@@ -212,7 +212,57 @@ export const prepareFormState = ( config, levelKey, arr = [] ) => {
 }
 
 // below method only being used by components who consume this ( HierachyForm ) generic component
-export const reArrangeFormState = (data, config, rootLevelKey) => {
-  window.log(data, config, rootLevelKey, '-==-=-==-=-=-=-=-===-')
-  return data
+export const reArrangeFormState = ( formState, config, rootLevelKey ) => {
+  const result = {}
+
+  if ( !isEmpty( formState ) ) {
+    const rootLevelState = formState[ rootLevelKey ]
+
+    const recursive = ( levelKey, levelArr = [], intermediateTmp = {} ) => {
+      if ( !levelKey || !levelArr.length )
+        return
+
+      const { childKey, dataKeys: currentDataKeys } = config[ levelKey ] || {}
+
+      const { oid: currentOidKey, apiKey: currentApiKey } = currentDataKeys || {}
+
+      const { dataKeys: childDataKeys } = config[ childKey ] || {}
+      const { apiKey: childApiKey } = childDataKeys || {}
+
+      if ( !currentOidKey || !currentApiKey )
+        return
+
+      for ( let i = 0; i < levelArr.length; i++ ) {
+        const { oid, isAdd, uniqueKey, isValueUnknown } = levelArr[ i ]
+
+        if ( isAdd || isValueUnknown )
+          continue
+
+        const tmp = {
+          [ currentOidKey ]: oid
+        }
+
+        if ( childApiKey )
+          tmp[ childApiKey ] = []
+
+        intermediateTmp[ currentApiKey ] = [
+          ...( intermediateTmp[ currentApiKey ] || [] ),
+          tmp,
+        ]
+
+        if ( childKey && childApiKey ) {
+          const childLevelState = formState[ childKey ]
+
+          const filteredLevelArr = childLevelState.filter( elem => uniqueKey === elem.parentUniqueKey && !( elem.isAdd || elem.isValueUnknown ) )
+
+          if ( filteredLevelArr.length )
+            recursive( childKey, filteredLevelArr, tmp )
+        }
+      }
+    }
+
+    recursive( rootLevelKey, rootLevelState, result )
+  }
+
+  return [].concat( ...Object.values( result ) )
 }
