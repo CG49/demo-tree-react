@@ -45,6 +45,7 @@ export const Level = React.forwardRef( ( { options, handleCollapsible, isRootLev
     currentIndex,
     handleOnClick,
     handleOnChange,
+    isValueUnknown,
     parentUniqueKey,
     buttonText = '',
     placeholder = '',
@@ -74,7 +75,7 @@ export const Level = React.forwardRef( ( { options, handleCollapsible, isRootLev
 
     const isValueCleared = !oid
 
-    handleOnChange( actionType, { oid, isAdd, label, levelKey, parentKey, rootOid, childKey, parentOid, parentIndex, currentIndex, parentUniqueKey, uniqueKey, isRootLevel, isValueCleared } )
+    handleOnChange( actionType, { oid, isAdd, label, levelKey, parentKey, rootOid, childKey, parentOid, parentIndex, currentIndex, parentUniqueKey, uniqueKey, isRootLevel, isValueCleared, isValueUnknown } )
 
     // eslint-disable-next-line
   }, [] )
@@ -84,7 +85,7 @@ export const Level = React.forwardRef( ( { options, handleCollapsible, isRootLev
 
     const { oid = uniqueKey } = defaultValue || {}
 
-    handleOnClick( actionType, { oid, isAdd, levelKey, parentKey, rootOid, childKey, parentOid, parentIndex, currentIndex, parentUniqueKey, uniqueKey, isRootLevel, maxLength } )
+    handleOnClick( actionType, { oid, isAdd, levelKey, parentKey, rootOid, childKey, parentOid, parentIndex, currentIndex, parentUniqueKey, uniqueKey, isRootLevel, maxLength, isValueUnknown } )
 
     // eslint-disable-next-line
   }, [] )
