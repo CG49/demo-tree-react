@@ -1,18 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 // components
-import { Blob } from './Blob'
+import { Blob, CONFIG, ROOT_LEVEL_KEY } from './Blob'
 import { ProductPlans } from './ProductPlans'
+
+// utils
+import { reArrangeFormState } from '../HierarchyForm/utils'
 
 // css
 import './Link.scss'
 
 export const Link = () => {
-	return (
+	const [ state, setState ] = useState( [] )
+
+	useEffect( () => {
+		reArrangeFormState( state, CONFIG, ROOT_LEVEL_KEY )
+	  }, [ state ] )
+
+	  return (
 		<>
-			<Blob />
+			<Blob setParentState={ setState } />
 			<hr />
-			<ProductPlans />
+			<ProductPlans setParentState={ setState } />
 		</>
 	)
 }
