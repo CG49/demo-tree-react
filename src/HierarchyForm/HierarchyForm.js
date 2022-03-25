@@ -1,291 +1,373 @@
-import React, { createRef, useReducer } from 'react'
+import React, { useEffect, useReducer, createRef } from 'react'
 
 // External Libraries
-import { isArray, isEmpty, findLastIndex } from 'lodash'
+import { isEmpty } from 'lodash'
 
-// components
 import { Level } from './Level'
 import { Ladder } from './Ladder'
+import { reducer } from './utils/reducer'
 
-// utils
-import { getLevelWiseObject } from './utils'
-
-// css
 import './scss/HierarchyForm.scss'
 
 // re-index resp. level and child levels array
-const reIndexClosure = ( state, config ) => {
-	const recursive = ( {
-		levelKey,
-		oldParentUniqueKey,
-		parentIndex = null,
-		isRecursive = false,
-		newParentUniqueKey = null
-	} ) => {
-		if ( !levelKey )
-			return
+// const reIndexClosure = ( { state, config, rootLevelKey, isRootLevel, isRemoveAction = false } ) => {
+// 	let isReIndexed = false
 
-		const tmpArr = state[ levelKey ]
-		const childKey = config[ levelKey ][ 'childKey' ]
+// 	const recursive = ( {
+// 		levelKey,
+// 		newOid = null,
+// 		newRootOid = null,
+// 		parentIndex = null,
+// 		oldParentUniqueKey,
+// 		isRecursive = false,
+// 		newParentUniqueKey = null,
+// 	} ) => {
+// 		if ( !levelKey )
+// 			return
 
-		const filteredTmpArr = tmpArr.filter( v => oldParentUniqueKey === v.parentUniqueKey )
+// 		const tmpArr = state[ levelKey ]
+// 		const childKey = config[ levelKey ][ 'childKey' ]
 
-		if ( !filteredTmpArr.length )
-			return
+// 		const filteredTmpArr = tmpArr.filter( v => oldParentUniqueKey === v.parentUniqueKey )
 
-		for ( let i = 0; i < filteredTmpArr.length; i++ ) {
-			const object = filteredTmpArr[ i ]
+// 		if ( !filteredTmpArr.length )
+// 			return
 
-			const { oid, isAdd, uniqueKey } = object
-			const tmpUniqueKey = isRecursive ? newParentUniqueKey : oldParentUniqueKey
-			const newUniqueKey = tmpUniqueKey ? `${ tmpUniqueKey }__${ levelKey }-${ i }` : `${ levelKey }-${ i }`
+// 		for ( let i = 0; i < filteredTmpArr.length; i++ ) {
+// 			const object = filteredTmpArr[ i ]
 
-			object.currentIndex = i
-			object.uniqueKey = newUniqueKey
-			object.parentUniqueKey = tmpUniqueKey
-			object.oid = isAdd ? newUniqueKey : oid
+// 			const { oid, isAdd, uniqueKey, isValueUnknown } = object
+// 			const tmpUniqueKey = isRecursive ? newParentUniqueKey : oldParentUniqueKey
+// 			const newUniqueKey = tmpUniqueKey ? `${ tmpUniqueKey }__${ levelKey }-${ i }` : `${ levelKey }-${ i }`
 
-			if ( isRecursive )
-				object.parentIndex = parentIndex
+// 			object.currentIndex = i
+// 			object.uniqueKey = newUniqueKey
+// 			object.parentUniqueKey = tmpUniqueKey
+// 			object.oid = isAdd ? newUniqueKey : oid
 
-			if ( childKey )
-				recursive( {
-					parentIndex: i,
-					isRecursive: true,
-					levelKey: childKey,
-					oldParentUniqueKey: uniqueKey,
-					newParentUniqueKey: newUniqueKey,
-				} )
-		}
-	}
+// 			if ( isRemoveAction ) {
+// 				if ( rootLevelKey === levelKey && isRootLevel ) {
+// 					object.oid = isValueUnknown ? newUniqueKey : oid
+// 					object.rootOid = isValueUnknown ? newUniqueKey : oid
+// 				} else {
+// 					object.parentOid = newOid
+// 					object.rootOid = newRootOid
+// 				}
+// 			}
 
-	return recursive
-}
+// 			if ( isRecursive )
+// 				object.parentIndex = parentIndex
 
-const removeChildrenClosure = ( state, config ) => {
-	// remove child elements from main object recursively
-	const recursive = ( { childKey, parentUniqueKey } ) => {
-		if ( !childKey )
-			return
+// 			// always set current object or first root element as re-indexed to avoid iterating other loop elements while updating parent state
+// 			if ( !isReIndexed ) {
+// 				if ( isRootLevel ) {
+// 					isReIndexed = true
 
-		const tmpChildKey = config[ childKey ][ 'childKey' ]
+// 					object.isReIndexed = isReIndexed
+// 				} else if ( state?.[ rootLevelKey ]?.length ) {
+// 					isReIndexed = true
 
-		const tmpChildArr = state[ childKey ]
+// 					state[ rootLevelKey ][ 0 ].isReIndexed = isReIndexed
+// 				}
+// 			}
 
-		let filteredTmpChildArr = ( tmpChildArr || [] ).filter( v => parentUniqueKey !== v.parentUniqueKey )
+// 			if ( childKey )
+// 				recursive( {
+// 					parentIndex: i,
+// 					isRecursive: true,
+// 					levelKey: childKey,
+// 					newOid: object.oid,
+// 					newRootOid: object.rootOid,
+// 					oldParentUniqueKey: uniqueKey,
+// 					newParentUniqueKey: newUniqueKey,
+// 				} )
 
-		state[ childKey ] = [ ...filteredTmpChildArr ]
+// 			window.log( 'continue', levelKey, i )
+// 		}
+// 	}
 
-		if ( tmpChildKey && tmpChildArr.length ) {
-			filteredTmpChildArr = tmpChildArr.filter( v => parentUniqueKey === v.parentUniqueKey )
+// 	return recursive
+// }
 
-			for ( let i = 0; i < filteredTmpChildArr.length; i++ )
-				recursive( {
-					childKey: tmpChildKey,
-					parentUniqueKey: filteredTmpChildArr[ i ].uniqueKey,
-				} )
-		}
-	}
+// const removeChildrenClosure = ( state, config ) => {
+// 	// remove child elements from main object recursively
+// 	const recursive = ( { childKey, parentUniqueKey } ) => {
+// 		if ( !childKey )
+// 			return
 
-	return recursive
-}
+// 		const tmpChildKey = config[ childKey ][ 'childKey' ]
 
-// change oid of current level and resp. child levels array
-const changeClosure = ( state, config, payload ) => {
-	const {
-		oid,
-		label,
-		levelKey,
-		findIndex,
-		isRootLevel,
-	} = payload
+// 		const tmpChildArr = state[ childKey ] || []
 
-	let tmpArr = state[ levelKey ]
-	const object = tmpArr[ findIndex ]
+// 		let filteredTmpChildArr = tmpChildArr.filter( v => parentUniqueKey !== v.parentUniqueKey )
 
-	object.oid = oid
-	object.name = label
-	object.isValidate = true
-	object.isValueUnknown = false
+// 		state[ childKey ] = [ ...filteredTmpChildArr ]
 
-	if ( isRootLevel )
-		object.rootOid = oid
+// 		if ( tmpChildKey && tmpChildArr.length ) {
+// 			filteredTmpChildArr = tmpChildArr.filter( v => parentUniqueKey === v.parentUniqueKey )
 
-	const recursive = ( levelKey, uniqueKey, isRemoveAddObject = false ) => {
-		if ( !levelKey || !uniqueKey )
-			return
+// 			for ( let i = 0; i < filteredTmpChildArr.length; i++ )
+// 				recursive( {
+// 					childKey: tmpChildKey,
+// 					parentUniqueKey: filteredTmpChildArr[ i ].uniqueKey,
+// 				} )
+// 		}
+// 	}
 
-		const childKey = config[ levelKey ][ 'childKey' ]
+// 	return recursive
+// }
 
-		if ( !childKey )
-			return
+// // change oid of current level and resp. child levels array
+// const changeClosure = ( state, config, payload ) => {
+// 	const {
+// 		oid,
+// 		label,
+// 		levelKey,
+// 		uniqueKey,
+// 		findIndex,
+// 		isRootLevel,
+// 		isValueCleared,
+// 	} = payload
 
-		tmpArr = state[ childKey ]
+// 	let tmpArr = state[ levelKey ] || []
+// 	const object = tmpArr[ findIndex ]
 
-		if ( !tmpArr.length )
-			return
+// 	object.name = label
+// 	object.isValidate = true
+// 	object.isValueUnknown = isValueCleared
+// 	object.oid = isValueCleared ? uniqueKey : oid
 
-		let filteredTmpChildArr = tmpArr.filter( v => ( uniqueKey !== v[ 'parentUniqueKey' ] || ( !isRemoveAddObject && v.isAdd ) ) )
+// 	if ( isRootLevel )
+// 		object.rootOid = isValueCleared ? uniqueKey : oid
 
-		state[ childKey ] = filteredTmpChildArr
+// 	const recursive = ( levelKey, uniqueKey, isRemoveAddObject = false ) => {
+// 		if ( !levelKey || !uniqueKey )
+// 			return
 
-		filteredTmpChildArr = tmpArr.filter( v => ( uniqueKey === v[ 'parentUniqueKey' ] ) )
+// 		const childKey = config[ levelKey ][ 'childKey' ]
 
-		if ( !filteredTmpChildArr.length )
-			return
+// 		if ( !childKey )
+// 			return
 
-		for ( let i = 0; i < filteredTmpChildArr.length; i++ ) {
-			const childObject = filteredTmpChildArr[ i ]
+// 		tmpArr = state[ childKey ] || []
 
-			if ( !childObject.isAdd )
-				recursive( childKey, filteredTmpChildArr[ i ].uniqueKey, true )
-			else {
-				childObject.parentOid = oid
+// 		if ( !tmpArr.length )
+// 			return
 
-				if ( isRootLevel )
-					childObject.rootOid = oid
-			}
-		}
-	}
+// 		let filteredTmpChildArr = tmpArr.filter( v => ( uniqueKey !== v[ 'parentUniqueKey' ] || ( !isRemoveAddObject && v.isAdd ) ) )
 
-	return recursive
-}
+// 		state[ childKey ] = filteredTmpChildArr
 
-const reducer = ( state, { type, payload, config } ) => {
-	const {
-		label, isRootLevel,
-		oid, rootOid, parentOid,
-		parentIndex, currentIndex,
-		parentUniqueKey, uniqueKey,
-		levelKey, childKey, parentKey,
-	} = payload
+// 		filteredTmpChildArr = tmpArr.filter( v => ( uniqueKey === v[ 'parentUniqueKey' ] ) )
 
-	if ( isEmpty( state ) )
-		return state
+// 		if ( !filteredTmpChildArr.length )
+// 			return
 
-	let newState = Object.assign( {}, state )
+// 		for ( let i = 0; i < filteredTmpChildArr.length; i++ ) {
+// 			const childObject = filteredTmpChildArr[ i ]
 
-	if ( !oid || !levelKey || !uniqueKey )
-		return newState
+// 			if ( !childObject.isAdd )
+// 				recursive( childKey, filteredTmpChildArr[ i ].uniqueKey, true )
+// 			else {
+// 				childObject.parentOid = isValueCleared ? childObject.parentUniqueKey : oid
 
-	let tmpArr = newState[ levelKey ]
-	const findIndex = tmpArr.findIndex( a => uniqueKey === a.uniqueKey )
+// 				if ( isRootLevel )
+// 					childObject.rootOid = isValueCleared ? childObject.parentUniqueKey : oid
+// 			}
+// 		}
+// 	}
 
-	switch ( type ) {
-		case 'REMOVE':
-			// remove element from resp. level
-			if ( findIndex !== -1 ) {
-				if ( childKey )
-					// state being passed as reference so no need to return it
-					// but in future if the state mutations are not reflecting we can just return it as a complete new object and assign it to newState variable defined in this reducer context above
-					removeChildrenClosure( newState, config )( { childKey, parentUniqueKey: uniqueKey } )
+// 	return recursive
+// }
 
-				tmpArr.splice( findIndex, 1 )
-			}
+// const reducer = ( state, { type, payload, config, rootLevelKey } ) => {
+// 	const {
+// 		oid, rootOid, parentOid,
+// 		parentIndex, currentIndex,
+// 		parentUniqueKey, uniqueKey,
+// 		levelKey, childKey, parentKey,
+// 		label, isRootLevel, isValueCleared,
+// 	} = payload
 
-			// remove element oid from parent object
-			tmpArr = newState[ parentKey ] || []
+// 	if ( isEmpty( state ) )
+// 		return state
 
-			if ( tmpArr.length && !isEmpty( tmpArr[ parentIndex ] && isArray( tmpArr[ parentIndex ][ levelKey ] ) ) )
-				currentIndex !== -1 && tmpArr[ parentIndex ][ levelKey ].splice( currentIndex, 1 )
+// 	let newState = Object.assign( {}, state )
 
-			// state being passed as reference so no need to return it
-			// but in future if the state mutations are not reflecting we can just return it as a complete new object and assign it to newState variable defined in this reducer context above
-			reIndexClosure( newState, config )( { levelKey, oldParentUniqueKey: parentUniqueKey } )
+// 	if ( ( !isValueCleared && !oid ) || !levelKey || !uniqueKey )
+// 		return newState
 
-			return { ...newState }
+// 	let tmpArr = newState[ levelKey ] || []
+// 	const findIndex = tmpArr.findIndex( a => uniqueKey === a.uniqueKey )
 
-		case 'ADD':
-			if ( findIndex !== -1 ) {
-				const object = tmpArr[ findIndex ]
+// 	switch ( type ) {
+// 		case 'REMOVE':
+// 			// remove element from resp. level
+// 			if ( findIndex !== -1 ) {
+// 				if ( childKey )
+// 					// state being passed as reference so no need to return it
+// 					// but in future if the state mutations are not reflecting we can just return it as a complete new object and assign it to newState variable defined in this reducer context above
+// 					removeChildrenClosure( newState, config )( { childKey, parentUniqueKey: uniqueKey } )
 
-				object.isAdd = false
+// 				tmpArr.splice( findIndex, 1 )
+// 			}
 
-				const newIndex = parseInt( currentIndex ) + 1
-				const tmpUniqueLevelKey = `${ levelKey }-${ newIndex }`
-				const tmpLevelObject = getLevelWiseObject( {
-					parentOid,
-					parentKey,
-					parentIndex,
-					isRootLevel,
-					isAdd: true,
-					parentUniqueKey,
-					currentIndex: newIndex,
-					rootOid: isRootLevel ? tmpUniqueLevelKey : rootOid,
-					uniqueKey: isRootLevel ? tmpUniqueLevelKey : `${ parentUniqueKey }__${ tmpUniqueLevelKey }`,
-				} )
+// 			// remove element oid from parent object
+// 			tmpArr = newState[ parentKey ] || []
 
-				tmpArr.splice( findIndex + 1, 0, tmpLevelObject )
+// 			if ( tmpArr.length && !isEmpty( tmpArr[ parentIndex ] && isArray( tmpArr[ parentIndex ][ levelKey ] ) ) )
+// 				currentIndex !== -1 && tmpArr[ parentIndex ][ levelKey ].splice( currentIndex, 1 )
 
-				// add child level object
-				if ( childKey ) {
-					tmpArr = newState[ childKey ]
+// 			// state being passed as reference so no need to return it
+// 			// but in future if the state mutations are not reflecting we can just return it as a complete new object and assign it to newState variable defined in this reducer context above
+// 			reIndexClosure( {
+// 				config,
+// 				isRootLevel,
+// 				rootLevelKey,
+// 				state: newState,
+// 				isRemoveAction: true,
+// 			} )( {
+// 				levelKey,
+// 				oldParentUniqueKey: parentUniqueKey
+// 			} )
 
-					const findChildLastIndex = findLastIndex( tmpArr, v => rootOid === v[ 'rootOid' ] )
+// 			return { ...newState }
 
-					if ( isArray( tmpArr ) ) {
-						const tmpChildLevelObject = getLevelWiseObject( {
-							rootOid,
-							childKey,
-							uniqueKey,
-							isRootLevel,
-							isAdd: true,
-							parentOid: oid,
-							parentKey: levelKey,
-							isAddChildLevel: true,
-							parentIndex: currentIndex,
-							parentUniqueKey: uniqueKey,
-						} )
+// 		// NOTE: Don't delete the commented code till the generic Hierarchy based component is stable
+// 		case 'ADD':
+// 			if ( findIndex !== -1 ) {
+// 				const object = tmpArr[ findIndex ]
 
-						// trival equation but works good only for root level
-						const position = isRootLevel ? tmpArr.length : findChildLastIndex + 1
+// 				object.isAdd = false
 
-						tmpArr.splice( position, 0, tmpChildLevelObject )
-					}
-				}
-			}
+// 				const newIndex = parseInt( currentIndex ) + 1
+// 				const tmpUniqueLevelKey = `${ levelKey }-${ newIndex }`
+// 				const tmpLevelObject = getLevelWiseObject( {
+// 					parentOid,
+// 					parentKey,
+// 					parentIndex,
+// 					isAdd: true,
+// 					parentUniqueKey,
+// 					currentIndex: newIndex,
+// 					rootOid: isRootLevel ? tmpUniqueLevelKey : rootOid,
+// 					uniqueKey: isRootLevel ? tmpUniqueLevelKey : `${ parentUniqueKey }__${ tmpUniqueLevelKey }`,
+// 				} )
 
-			return { ...newState }
+// 				tmpArr.splice( findIndex + 1, 0, tmpLevelObject )
 
-		case 'CHANGE':
-			// state being passed as reference so no need to return it
-			// but in future if the state mutations are not reflecting we can just return it as a complete new object and assign it to newState variable defined in this reducer context above
-			if ( findIndex !== -1 ) {
-				changeClosure( newState, config, {
-					oid,
-					label,
-					levelKey,
-					findIndex,
-					isRootLevel,
-				} )( levelKey, uniqueKey )
+// 				// add child level object
+// 				if ( childKey ) {
+// 					tmpArr = newState[ childKey ] || []
 
-				reIndexClosure( newState, config )( { levelKey, oldParentUniqueKey: parentUniqueKey } )
-			}
+// 					const findChildLastIndex = findLastIndex( tmpArr, v => rootOid === v[ 'rootOid' ] )
 
-			return { ...newState }
+// 					// if ( isArray( tmpArr ) ) {
+// 					const tmpChildLevelObject = getLevelWiseObject( {
+// 						rootOid,
+// 						childKey,
+// 						uniqueKey,
+// 						isAdd: true,
+// 						parentOid: oid,
+// 						parentKey: levelKey,
+// 						isAddChildLevel: true,
+// 						parentIndex: currentIndex,
+// 						parentUniqueKey: uniqueKey,
+// 					} )
 
-		default:
-			return newState
-	}
-}
+// 					// trival equation but works good only for root level
+// 					const position = isRootLevel ? tmpArr.length : findChildLastIndex + 1
 
-export const HierarchyForm = ( {
-	title,
+// 					tmpArr.splice( position, 0, tmpChildLevelObject )
+// 					// }
+// 				}
+
+// 				const rootTmpArr = state[ rootLevelKey ]
+
+// 				// rest all rootLevel elements as not re-indexed to avoid updating parent state
+// 				for ( let i = 0; i < rootTmpArr.length; i++ )
+// 					rootTmpArr[ i ].isReIndexed = false
+// 			}
+
+// 			return { ...newState }
+
+// 		case 'CHANGE':
+// 			// state being passed as reference so no need to return it
+// 			// but in future if the state mutations are not reflecting we can just return it as a complete new object and assign it to newState variable defined in this reducer context above
+// 			if ( findIndex !== -1 ) {
+// 				changeClosure( newState, config, {
+// 					oid,
+// 					label,
+// 					levelKey,
+// 					uniqueKey,
+// 					findIndex,
+// 					isRootLevel,
+// 					isValueCleared,
+// 				} )( levelKey, uniqueKey )
+
+// 				reIndexClosure( {
+// 					config,
+// 					isRootLevel,
+// 					rootLevelKey,
+// 					state: newState,
+// 				} )( {
+// 					levelKey,
+// 					oldParentUniqueKey: parentUniqueKey
+// 				} )
+// 			}
+
+// 			return { ...newState }
+
+// 		default:
+// 			return newState
+// 	}
+// }
+
+export const HierarchyForm = React.memo( ( {
 	config,
 	globalStore,
 	rootLevelKey,
+	title = null,
+	setParentState,
 	formInitState = {},
 } ) => {
 	const [ reducerState, dispatch ] = useReducer( reducer, null, () => formInitState )
-
+	window.log( '================', reducerState )
 	const refs = {}
 	const childElements = {}
 	const parentElements = {}
+
+	useEffect( () => {
+		const data = reducerState?.[ rootLevelKey ] || []
+
+		if ( data.length ) {
+			let isUpdateParentState = false
+
+			for ( let i = 0; i < data.length; i++ ) {
+				const { isAdd, isValueUnknown, isReIndexed = false } = data[ i ]
+
+				if ( isUpdateParentState )
+					break
+
+				if ( !isReIndexed )
+					continue
+
+				if ( !isReIndexed && ( isAdd || isValueUnknown ) )
+					continue
+
+				isUpdateParentState = true
+			}
+
+			if ( isUpdateParentState )
+				setParentState(reducerState)
+		}
+		// eslint-disable-next-line
+	}, [ reducerState ] )
 
 	const handleOnChange = React.useCallback( ( actionType, payload ) => {
 		dispatch( {
 			config,
 			payload,
+			rootLevelKey,
 			type: actionType,
 		} )
 		// eslint-disable-next-line
@@ -295,6 +377,7 @@ export const HierarchyForm = ( {
 		dispatch( {
 			config,
 			payload,
+			rootLevelKey,
 			type: actionType,
 		} )
 		// eslint-disable-next-line
@@ -354,13 +437,11 @@ export const HierarchyForm = ( {
 						childKey,
 						levelKey,
 						parentKey,
-						rootLevelKey,
 						defaultValue,
 						handleOnClick,
 						handleOnChange,
 						globalLevelData,
 						placeholder: label,
-						// handleOnClickCollapsible,
 						buttonText: isAdd ? label : buttonText,
 					} }
 				/>
@@ -390,7 +471,7 @@ export const HierarchyForm = ( {
 	return (
 		<div id={ rootLevelKey }>
 			{/* Title */ }
-			<span className='title'>{ title }</span>
+			{ title && <span className='title'>{ title }</span> }
 
 			{ !isEmpty( parentElements ) &&
 				<Ladder
@@ -400,40 +481,4 @@ export const HierarchyForm = ( {
 			}
 		</div>
 	)
-}
-
-// const Collapsible = ( { children, isOpen = true } ) => {
-// 	return <Collapse in={ isOpen }>
-// 		<div>
-// 			{ children }
-// 		</div>
-// 	</Collapse>
-// }
-
-
-// const handleOnClickCollapsible = React.useCallback( ( { rootOid } ) => {
-// 	// Change the collapsible icon
-// 	// ...
-
-// 	setCollapsibleState( prevState => {
-// 		const stateIsOpen = typeof prevState[ rootOid ] === 'undefined' ? true : prevState[ rootOid ]
-
-// 		return {
-// 			...prevState,
-// 			[ rootOid ]: !stateIsOpen,
-// 		}
-// 	} )
-// 	eslint-disable-next-line
-// }, [] )
-
-// 	for ( const rootOid in parentElements ) {
-// 		elements.push( parentElements[ rootOid ] )
-
-// 		// const stateIsOpen = typeof collapsibleState[ rootOid ] === 'undefined' ? true : collapsibleState[ rootOid ]
-
-// 		elements.push(
-// 			<Collapsible key={ rootOid } isOpen={ true }>
-// 				{ childElements[ rootOid ] }
-// 			</Collapsible>
-// 		)
-// 	}
+} )
