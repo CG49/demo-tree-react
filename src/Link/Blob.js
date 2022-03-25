@@ -125,7 +125,7 @@ const initGlobalData = {
 	[ CONFIG.LOCATIONS.id ]: [],
 }
 
-export const Blob = ({setParentState = null}) => {
+export const Blob = React.memo( ( { setParentState = null } ) => {
 	const [ linkState, setLinkState ] = useState( {} )
 	const [ isLoading, setIsLoading ] = useState( true )
 	const [ globalState, setGlobalState ] = useState( initGlobalData )
@@ -177,4 +177,4 @@ export const Blob = ({setParentState = null}) => {
 			setParentState={ setParentState }
 		/>
 	)
-}
+} )
