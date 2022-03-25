@@ -39,15 +39,18 @@ const reIndexClosure = ( { state, config, rootLevelKey, isRootLevel, isRemoveAct
             object.parentUniqueKey = tmpUniqueKey
             object.oid = isAdd ? newUniqueKey : oid
 
-            if ( isRemoveAction ) {
-                if ( rootLevelKey === levelKey && isRootLevel ) {
-                    object.oid = isValueUnknown ? newUniqueKey : oid
-                    object.rootOid = isValueUnknown ? newUniqueKey : oid
-                } else {
-                    object.parentOid = newOid
-                    object.rootOid = newRootOid
-                }
-            }
+			// don't change below conditions
+			if ( isRemoveAction ) {
+				if ( rootLevelKey === levelKey && isRootLevel ) {
+					object.oid = isValueUnknown ? newUniqueKey : oid
+					object.rootOid = isValueUnknown ? newUniqueKey : oid
+				}
+
+                if ( rootLevelKey !== levelKey && newOid && newRootOid ) {
+					object.parentOid = newOid
+					object.rootOid = newRootOid
+				}
+			}
 
             if ( isRecursive )
                 object.parentIndex = parentIndex
@@ -174,11 +177,12 @@ const changeClosure = ( state, config, payload ) => {
 
 export const reducer = ( state, { type, payload, config, rootLevelKey } ) => {
     const {
+        label,
         oid, rootOid, parentOid,
         parentIndex, currentIndex,
         parentUniqueKey, uniqueKey,
+        isRootLevel, isValueCleared,
         levelKey, childKey, parentKey,
-        label, isRootLevel, isValueCleared,
     } = payload
 
     if ( isEmpty( state ) )
