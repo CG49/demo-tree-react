@@ -14,7 +14,8 @@ export const Link = () => {
 	const [ state, setState ] = useState( [] )
 
 	useEffect( () => {
-		reArrangeFormState( state, CONFIG, ROOT_LEVEL_KEY )
+		console.log('-=-=')
+		console.log(reArrangeFormState( state, CONFIG, ROOT_LEVEL_KEY ))
 	  }, [ state ] )
 
 	  return (
