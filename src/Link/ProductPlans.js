@@ -90,7 +90,7 @@ const initGlobalData = {
 	[ CONFIG.PLANS.globalStateKey ]: [],
 }
 
-export const ProductPlans = () => {
+export const ProductPlans = React.memo( ( { setParentState } ) => {
 	const [ linkState, setLinkState ] = useState( {} )
 	const [ isLoading, setIsLoading ] = useState( true )
 	const [ globalState, setGlobalState ] = useState( initGlobalData )
@@ -139,6 +139,7 @@ export const ProductPlans = () => {
 			formInitState={ linkState }
 			globalStore={ globalState }
 			rootLevelKey={ ROOT_LEVEL_KEY }
+			setParentState={ setParentState }
 		/>
 	)
-}
+} )
