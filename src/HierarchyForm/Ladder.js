@@ -37,7 +37,7 @@ export const Ladder = ( { parentElements = {}, childElements = {} } ) => {
 
 	for ( const rootOid in parentElements ) {
 		elements.push(
-			React.cloneElement( parentElements[ rootOid ][ 0 ], { handleCollapsible } )
+			React.cloneElement( parentElements[ rootOid ][ 0 ], { handleCollapsible, isExpanded: state[ rootOid ] } )
 		)
 
 		if ( !isEmpty( childElements ) && !isEmpty( childElements[ rootOid ] ) ) {
@@ -53,4 +53,3 @@ export const Ladder = ( { parentElements = {}, childElements = {} } ) => {
 
 	return elements
 }
-
