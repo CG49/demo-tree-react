@@ -1,9 +1,9 @@
-$bg: #fff;
+$bg: #FFFFFF;
 
 .level {
 	display: flex;
 	margin-top: 8px;
-    align-items: baseline;
+    align-items: center;
 }
 
 .icon-hidden {
@@ -11,83 +11,61 @@ $bg: #fff;
 }
 
 .icon-container {
+	left: 1.17%;	
 	width: 22px;
 	height: 22px;
-	left: 1.17%;
+	margin-right: 5px;
 	position: relative;
-}
-
-.icon {
-	color: transparent;
-	user-select: none;
-	position: relative;
-	display: inline-block;
-	box-sizing: border-box;
-	overflow: visible;
-	vertical-align: top;
-	font-style: normal;
-	font-size: 22px;
-	mix-blend-mode: multiply;
-	cursor: pointer;
-}
-
-.icon:before, .icon:after {
-  	/* BACKGROUND COLOR */
-	background-color: $bg;
-	border-color: $bg;
-	color: $bg;
-
-	content: '';
-	position: absolute;
-	display: block;
-	box-sizing: border-box;
-}
-
-.caret-down:before {
-	width: 0.25em;
-	height: 0.25em;
-	border-top: 0;
-	border-left: 2px;
-	border-bottom: 2px;
-	border-right: 0;
-	border-color: #FFF;
-	border-style: solid;
-	top: 7px;
-	left: 8px;
-	background: transparent;
-	transform: rotate(-45deg);
-}
-
-.caret-down:after {
-	z-index: -1;
+	border-radius: 16px;
 	background-color: #0A7593;
-	border-radius: 100%;
-	width: 1em;
-	height: 1em;
-	top: 0;
-	left: 0;
 }
 
-.form-input {
-	margin-left: 25px;
-	width: 550px;
+.caret {
+	&::before {
+		/* By using an em scale, the arrows will size with the font */
+		content: '';
+		width: 0.4rem;
+		height: 0.4rem;
+		position: relative;
+		display: inline-block;
+		border-top: 0.125em solid white;
+		border-right: 0.125em solid white;
+	}
+}
+
+.caret-up {
+	&::before {
+		left: 10px;
+		margin-bottom: 4px;
+		transform: rotate(-45deg) translate(-50%);
+	}
+}
+
+.caret-down {
+	&::before {
+		left: 5px;
+		margin-bottom: 2px;
+		transform: rotate(135deg) translate(-50%);
+	}
 }
 
 .add-button {
-	text-align: left;
-	background: #FFF;
-  	color: #26A300;
-  	border: 1px dashed #26A300;
-  	padding: 5px 10px;
-	border-radius: 4px;
-	font-family: Open Sans;
-	font-style: normal;
-	font-weight: bold;
 	font-size: 12px;
+	text-align: left;
+	color: #26A300;
+	padding: 5px 10px;
 	line-height: 16px;
+	font-weight: bold;
+	font-style: normal;
+	border-radius: 4px;
+	background: #FFFFFF;
+	font-family: Open Sans;
+	border: 1px dashed #26A300;
 }
 
-.add-button:focus, .add-button:hover, .add-button:active {
+.add-button:focus,
+.add-button:hover,
+.add-button:active {
 	color: #FFF;
 	background: #007E33;
 	border: 2px solid #007E33;
@@ -95,24 +73,27 @@ $bg: #fff;
 }
 
 .remove-button {
+	color: #CC0000;
 	margin-left: 7px;
+	font-size: 12px;
+	padding: 8px 16px;
+	line-height: 16px;
+	font-weight: bold;
 	text-align: center;
-	background: #FFF;
-  	color: #CC0000;
-  	border: 2px solid #CC0000;
-  	padding: 5px 10px;
-  	text-transform: uppercase;
+	font-style: normal;
 	border-radius: 8px;
 	font-family: Open Sans;
-	font-style: normal;
-	font-weight: bold;
-	font-size: 12px;
-	line-height: 16px;
+	text-transform: uppercase;
+	border: 2px solid #CC0000;
+
+	& span {
+		margin-left: 5px;
+	}
 }
 
-.remove-button:focus, .remove-button:hover, .remove-button:active {
-	color: #FFF;
+.remove-button:focus,
+.remove-button:hover,
+.remove-button:active {
+	color: #FFFFFF;
 	background: #CC0000;
-	border: 2px solid #CC0000;
-	box-shadow: none !important;
 }
