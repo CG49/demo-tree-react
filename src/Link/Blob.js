@@ -8,7 +8,8 @@ import {
 	prepareFormState,
 	reArrangeAPIResponse,
 	prepareGlobalStoreData,
-  } from '../HierarchyForm'
+} from '../HierarchyForm'
+
 export const CONFIG = {
 	BLOB: {
 		id: 'BLOB',
