@@ -128,42 +128,43 @@ export const prepareFormState = ( config, levelKey, arr = [] ) => {
         object[ childKey ] = []
 
       if ( childrens.length ) {
+        // not needed so disabled temporarily
         // logic to add children oids from main object to parent object as an array
-        const innerRecursive = ( childKey, childrens ) => {
-          const {
-            dataKeys,
-            // childKey: nestedChildKey = null,
-          } = config[ childKey ] || {}
-          const {
-            oid,
-            // childAPIKey,
-          } = dataKeys || {}
+        // const innerRecursive = ( childKey, childrens ) => {
+        //   const {
+        //     dataKeys,
+        //     // childKey: nestedChildKey = null,
+        //   } = config[ childKey ] || {}
+        //   const {
+        //     oid,
+        //     // childAPIKey,
+        //   } = dataKeys || {}
 
-          // if ( nestedChildKey )
-          // 	object[ nestedChildKey ] = []
+        //   // if ( nestedChildKey )
+        //   // 	object[ nestedChildKey ] = []
 
-          for ( let j = 0; j < childrens.length; j++ ) {
-            // let tmpChildrens = []
-            const tmpOid = childrens[ j ][ oid ]
+        //   for ( let j = 0; j < childrens.length; j++ ) {
+        //     // let tmpChildrens = []
+        //     const tmpOid = childrens[ j ][ oid ]
 
-            if ( !tmpOid )
-              continue
+        //     if ( !tmpOid )
+        //       continue
 
-            // if ( childAPIKey )
-            // 	tmpChildrens = ( childrens[ j ][ childAPIKey ] || [] )
+        //     // if ( childAPIKey )
+        //     // 	tmpChildrens = ( childrens[ j ][ childAPIKey ] || [] )
 
-            object[ childKey ] = [
-              ...( object[ childKey ] || [] ),
-              tmpOid,
-            ]
+        //     object[ childKey ] = [
+        //       ...( object[ childKey ] || [] ),
+        //       tmpOid,
+        //     ]
 
-            // logic to add nested children oids from main object to root parent object as an array
-            // if ( tmpChildrens.length )
-            // 	innerRecursive( nestedChildKey, tmpChildrens )
-          }
-        }
+        //     // logic to add nested children oids from main object to root parent object as an array
+        //     // if ( tmpChildrens.length )
+        //     // 	innerRecursive( nestedChildKey, tmpChildrens )
+        //   }
+        // }
 
-        innerRecursive( childKey, childrens )
+        // innerRecursive( childKey, childrens )
 
         outerRecursive( childKey, childrens, object, tmpUniqueKey )
       }
