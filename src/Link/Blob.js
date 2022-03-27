@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react'
 // External Libraries
 import axios from 'axios'
 
-// components and utils
-import { reArrangeAPIResponse, prepareFormState, prepareGlobalStoreData } from '../HierarchyForm/utils'
-import { HierarchyForm } from '../HierarchyForm'
-
+import {
+	HierarchyForm,
+	prepareFormState,
+	reArrangeAPIResponse,
+	prepareGlobalStoreData,
+  } from '../HierarchyForm'
 export const CONFIG = {
 	BLOB: {
 		id: 'BLOB',
