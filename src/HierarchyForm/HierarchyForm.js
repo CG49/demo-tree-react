@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, createRef } from 'react'
 
 // External Libraries
-import { isArray, isEmpty, findLastIndex } from 'lodash'
+import { isEmpty } from 'lodash'
 
 import { Level } from './Level'
 import { Ladder } from './Ladder'
@@ -18,7 +18,7 @@ export const HierarchyForm = React.memo( ( {
 	formInitState = {},
 } ) => {
 	const [ reducerState, dispatch ] = useReducer( reducer, null, () => formInitState )
-	// console.log( '================', reducerState )
+
 	const refs = {}
 	const childElements = {}
 	const parentElements = {}
@@ -45,7 +45,7 @@ export const HierarchyForm = React.memo( ( {
 			}
 
 			if ( isUpdateParentState )
-				setParentState(reducerState)
+				setParentState( reducerState )
 		}
 		// eslint-disable-next-line
 	}, [ reducerState ] )
@@ -154,8 +154,7 @@ export const HierarchyForm = React.memo( ( {
 
 	if ( !isEmpty( reducerState ) )
 		getElementRecursive( rootLevelKey, reducerState[ rootLevelKey ] )
-	// console.log( childElements, 'childElements' )
-	// console.log( parentElements, 'parentElements' )
+
 	return (
 		<div id={ rootLevelKey }>
 			{/* Title */ }

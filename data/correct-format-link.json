@@ -60,37 +60,17 @@
 							{
 								"LocationOid": "65fd310f-7615-4e9e-86dd-7aaf45e0462e",
 								"LocationName": "WMMS AZ"
-							}
-						]
-					}
-				]
-			},
-			{
-				"BlockOfBusinessOid": "0c057b6e-a47f-4a56-8d30-406c72026c6d",
-				"BlockOfBusinessID": "VSV",
-				"BlockOfBusinessName": "Superior Vision",
-				"Client": [
-					{
-						"ClientOid": "c40d97f4-fdea-46a0-8b8a-c72f00a56dc0",
-						"ClientName": "Superior Vision Sample Group 01",
-						"Location": [
+							},
 							{
 								"LocationOid": "dbff5100-0164-4e1e-9a99-dde6e78eb018",
 								"LocationName": "Wixom"
 							}
 						]
-					}
-				]
-			},
-			{
-				"BlockOfBusinessOid": "0c057b6e-a47f-4a56-8d30-406c72026c6d",
-				"BlockOfBusinessID": "VSV",
-				"BlockOfBusinessName": "Superior Vision",
-				"Client": [
+					},
 					{
 						"ClientOid": "bb5b8193-09bf-49d4-9e7e-1139b33d61d4",
 						"ClientName": "Medicaid",
-						"Location": [
+						"aLocation": [
 							{
 								"LocationOid": "a013864c-7e30-4b41-9516-46fa71622ce2",
 								"LocationName": "Sun City 4"

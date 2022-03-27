@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 // components and utils
-import { HierarchyForm, prepareFormState, prepareGlobalStoreData } from '../HierarchyForm'
+import { reArrangeAPIResponse, prepareFormState, prepareGlobalStoreData } from '../HierarchyForm/utils'
+import { HierarchyForm } from '../HierarchyForm'
 
 export const CONFIG = {
 	BLOB: {
@@ -151,10 +152,13 @@ export const Blob = React.memo( ( { setParentState = null } ) => {
 
 				setGlobalState( prevState => ( {
 					...prevState,
-					...prepareGlobalStoreData( globalStoreData, CONFIG ),
+					...prepareGlobalStoreData( CONFIG, globalStoreData ),
 				} ) )
 
-				const arr = data[ CONFIG[ ROOT_LEVEL_KEY ][ 'dataKeys' ][ 'apiKey' ] ] || []
+				let arr = data[ CONFIG[ ROOT_LEVEL_KEY ][ 'dataKeys' ][ 'apiKey' ] ] || []
+
+				// NOTE: if in future API response format issue is fixed then no need to call below function
+				arr = reArrangeAPIResponse( CONFIG, ROOT_LEVEL_KEY, arr )
 
 				setLinkState( prepareFormState( CONFIG, ROOT_LEVEL_KEY, arr ) )
 

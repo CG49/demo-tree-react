@@ -14,11 +14,11 @@ export const Link = () => {
 	const [ state, setState ] = useState( [] )
 
 	useEffect( () => {
-		console.log('-=-=')
-		console.log(reArrangeFormState( state, CONFIG, ROOT_LEVEL_KEY ))
-	  }, [ state ] )
+		console.log( 'reArrangedFormState' )
+		console.log( reArrangeFormState( CONFIG, ROOT_LEVEL_KEY, state ) )
+	}, [ state ] )
 
-	  return (
+	return (
 		<>
 			<Blob setParentState={ setState } />
 			<hr />

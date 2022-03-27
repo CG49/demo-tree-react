@@ -1,7 +1,8 @@
-export { 
+export {
   prepareFormState,
   getLevelWiseObject,
   reArrangeFormState,
+  reArrangeAPIResponse,
   prepareGlobalStoreData,
 } from './common'
 

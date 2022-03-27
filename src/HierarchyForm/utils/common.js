@@ -1,7 +1,9 @@
 // Third party packages
-import { isEmpty } from 'lodash'
+import { isEmpty, groupBy } from 'lodash'
 
-// NOTE: Don't delete the commented code till the generic Hierarchy based component is stable
+// NOTE:
+// 1. Don't mess with below function
+// 2. Don't delete the commented code till the generic Hierarchy based component is stable
 export const getLevelWiseObject = ( {
   isAdd = false,
   rootOid = null,
@@ -28,7 +30,10 @@ export const getLevelWiseObject = ( {
   ...rest,
 } )
 
-export const prepareGlobalStoreData = ( globalStore, config ) => {
+// NOTE:
+// 1. Don't mess with below function
+// 2. Don't delete the commented code till the generic Hierarchy based component is stable
+export const prepareGlobalStoreData = ( config, globalStore ) => {
   if ( isEmpty( config ) )
     throw new Error( 'Failed to load config object' )
 
@@ -64,7 +69,9 @@ export const prepareGlobalStoreData = ( globalStore, config ) => {
   return data
 }
 
-// NOTE: Don't delete the commented code till the generic Hierarchy based component is stable
+// NOTE:
+// 1. Don't mess with below function
+// 2. Don't delete the commented code till the generic Hierarchy based component is stable
 export const prepareFormState = ( config, levelKey, arr = [] ) => {
   if ( isEmpty( config ) )
     throw new Error( 'Failed to load config object' )
@@ -211,11 +218,15 @@ export const prepareFormState = ( config, levelKey, arr = [] ) => {
   return data
 }
 
-// below method only being used by components who consume this ( HierachyForm ) generic component
-export const reArrangeFormState = ( formState, config, rootLevelKey ) => {
+// 1. Don't mess with below function
+// below method is being used by components who consume this ( HierachyForm ) generic component
+export const reArrangeFormState = ( config, rootLevelKey, formState = {}, isReArrangeAPIResponse = false ) => {
+  if ( isEmpty( config ) )
+    throw new Error( 'Failed to load config object' )
+
   const result = {}
 
-  if ( !isEmpty( formState ) ) {
+  if ( rootLevelKey && !isEmpty( formState ) ) {
     const rootLevelState = formState[ rootLevelKey ]
 
     const recursive = ( levelKey, levelArr = [], intermediateTmp = {} ) => {
@@ -224,33 +235,34 @@ export const reArrangeFormState = ( formState, config, rootLevelKey ) => {
 
       const { childKey, dataKeys: currentDataKeys } = config[ levelKey ] || {}
 
-      const { oid: currentOidKey, apiKey: currentApiKey } = currentDataKeys || {}
+      const { oid: currentOidKey, apiKey: currentAPIKey, childAPIKey } = currentDataKeys || {}
 
-      const { dataKeys: childDataKeys } = config[ childKey ] || {}
-      const { apiKey: childApiKey } = childDataKeys || {}
-
-      if ( !currentOidKey || !currentApiKey )
+      if ( !currentOidKey || !currentAPIKey )
         return
 
       for ( let i = 0; i < levelArr.length; i++ ) {
-        const { oid, isAdd, uniqueKey, isValueUnknown } = levelArr[ i ]
+        const { oid, name, uniqueKey, isAdd = false, isValueUnknown = false } = levelArr[ i ]
 
         if ( isAdd || isValueUnknown )
           continue
 
-        const tmp = {
-          [ currentOidKey ]: oid
-        }
+        const tmp = {}
 
-        if ( childApiKey )
-          tmp[ childApiKey ] = []
+        if ( isReArrangeAPIResponse )
+          tmp[ 'name' ] = name
 
-        intermediateTmp[ currentApiKey ] = [
-          ...( intermediateTmp[ currentApiKey ] || [] ),
+        tmp[ currentOidKey ] = oid
+
+        if ( childAPIKey )
+          tmp[ childAPIKey ] = []
+
+        intermediateTmp[ currentAPIKey ] = [
+          ...( intermediateTmp[ currentAPIKey ] || [] ),
           tmp,
         ]
 
-        if ( childKey && childApiKey ) {
+        // any one child based variable will work no need of both childKey and childAPIKey but just to strict check on schema
+        if ( childKey && childAPIKey ) {
           const childLevelState = formState[ childKey ]
 
           const filteredLevelArr = childLevelState.filter( elem => uniqueKey === elem.parentUniqueKey && !( elem.isAdd || elem.isValueUnknown ) )
@@ -264,5 +276,68 @@ export const reArrangeFormState = ( formState, config, rootLevelKey ) => {
     recursive( rootLevelKey, rootLevelState, result )
   }
 
+  // converted 2D array to 1D and then returned
   return [].concat( ...Object.values( result ) )
+}
+
+// NOTE:
+// 1. Do not alter below function
+// 2. Below function is written to fix issue with the API response not being sent in proper format. If in future API response format issue is fixed then no need of below function
+export const reArrangeAPIResponse = ( config, rootLevelKey, data = [] ) => {
+  if ( isEmpty( config ) )
+    throw new Error( 'Failed to load config object' )
+
+  if ( !data.length )
+    return []
+
+  const result = {}
+
+  const recursive = ( levelKey, levelData, parentUniqueKey = null ) => {
+    const { childKey, dataKeys, isRootLevel } = config[ levelKey ] || {}
+    const { oid: oidKey, name: nameKey, childAPIKey } = dataKeys || {}
+
+    const levelGroupedData = groupBy( levelData, oidKey )
+
+    if ( oidKey && nameKey ) {
+      for ( const key in levelGroupedData ) {
+        const tmpArr = levelGroupedData[ key ]
+
+        for ( let i = 0; i < tmpArr.length; i++ ) {
+          const { [ childAPIKey ]: childArr, [ oidKey ]: oid, [ nameKey ]: name } = tmpArr[ i ]
+
+          const tmpParentUniqueKey = isRootLevel ? oid : parentUniqueKey
+
+          const tmpObject = {
+            [ key ]: {
+              oid,
+              name,
+              uniqueKey: oid,
+            }
+          }
+
+          if ( !isRootLevel )
+            tmpObject[ key ][ 'parentUniqueKey' ] = tmpParentUniqueKey
+
+          result[ levelKey ] = {
+            ...( result[ levelKey ] || {} ),
+            ...tmpObject,
+          }
+
+          if ( childAPIKey )
+            recursive( childKey, childArr, oid )
+        }
+      }
+    }
+  }
+
+  recursive( rootLevelKey, data )
+
+  // conversion of 2D array to 1D
+  for ( const key in result )
+    result[ key ] = [].concat( ...Object.values( result[ key ] ) )
+
+  if ( !isEmpty( result ) )
+    return reArrangeFormState( config, rootLevelKey, result, true )
+
+  return []
 }
